@@ -30,6 +30,11 @@ public class PgColumn {
     private static final Pattern PATTERN_NOT_NULL = Pattern.compile(
             "^(.+)[\\s]+NOT[\\s]+NULL$", Pattern.CASE_INSENSITIVE);
     /**
+     * Pattern for parsing DEFAULT NULL arguments.
+     */
+    private static final Pattern PATTERN_DEFAULT_NULL = Pattern.compile(
+            "^(.+)[\\s]+DEFAULT[\\s]+NULL$", Pattern.CASE_INSENSITIVE);
+    /**
      * Pattern for parsing DEFAULT value.
      */
     private static final Pattern PATTERN_DEFAULT = Pattern.compile(
@@ -261,7 +266,25 @@ public class PgColumn {
     public void parseDefinition(final String definition) {
         String string = definition;
 
-        Matcher matcher = PATTERN_NOT_NULL.matcher(string);
+        Matcher matcher;
+
+        // matching DEFAULT NULL at the end
+        matcher = PATTERN_DEFAULT_NULL.matcher(string);
+
+        if (matcher.matches()) {
+            string = matcher.group(1).trim();
+            setNullValue(true);
+        }
+
+        // matching DEFAULT X for the case it's at the end
+        matcher = PATTERN_DEFAULT.matcher(string);
+
+        if (matcher.matches()) {
+            string = matcher.group(1).trim();
+            setDefaultValue(matcher.group(2).trim());
+        }
+
+        matcher = PATTERN_NOT_NULL.matcher(string);
 
         if (matcher.matches()) {
             string = matcher.group(1).trim();
@@ -275,6 +298,7 @@ public class PgColumn {
             }
         }
 
+        // matching DEFAULT X for the case was at the beginning
         matcher = PATTERN_DEFAULT.matcher(string);
 
         if (matcher.matches()) {

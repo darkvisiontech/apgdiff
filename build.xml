@@ -1,11 +1,11 @@
 <project name="apgdiff" default="jar" basedir=".">
     <property name="name" value="Another PostgreSQL Diff Tool"/>
-    <property name="version" value="2.5"/>
+    <property name="version" value="2.6"/>
     <property name="build" value="build"/>
     <property name="dist" value="dist"/>
     <property name="build.output" value="${build}/classes"/>
     <property name="dist.javadoc" value="${dist}/javadoc"/>
-    <property name="build.final.name" value="${ant.project.name}-${version}"/>
+    <property name="build.final.name" value="${ant.project.name}"/>
     <property name="lib" value="lib"/>
     <property name="test.reports" value="${build}/test-reports"/>
     <property name="test.output" value="${build}/test-classes"/>
