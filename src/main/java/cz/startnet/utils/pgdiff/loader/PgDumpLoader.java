@@ -20,6 +20,7 @@ import cz.startnet.utils.pgdiff.parsers.CreateTriggerParser;
 import cz.startnet.utils.pgdiff.parsers.CreateViewParser;
 import cz.startnet.utils.pgdiff.parsers.GrantRevokeParser;
 import cz.startnet.utils.pgdiff.parsers.CreatePolicyParser;
+import cz.startnet.utils.pgdiff.parsers.CreateProcedureParser;
 import cz.startnet.utils.pgdiff.parsers.CreateRuleParser;
 import cz.startnet.utils.pgdiff.schema.PgDatabase;
 import java.io.BufferedReader;
@@ -123,7 +124,15 @@ public class PgDumpLoader { //NOPMD
      */
     private static final Pattern PATTERN_CREATE_FUNCTION = Pattern.compile(
             "^CREATE[\\s]+(?:OR[\\s]+REPLACE[\\s]+)?FUNCTION[\\s]+.*$",
+            Pattern.CASE_INSENSITIVE | Pattern.DOTALL);    
+    /**
+     * Pattern for testing whether it is CREATE PROCEDURE or CREATE OR REPLACE
+     * PROCEDURE statement.
+     */
+    private static final Pattern PATTERN_CREATE_PROCEDURE = Pattern.compile(
+            "^CREATE[\\s]+(?:OR[\\s]+REPLACE[\\s]+)?PROCEDURE[\\s]+.*$",
             Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+    
     /**
      * Pattern for testing whether it is ALTER VIEW statement.
      */
@@ -175,7 +184,7 @@ public class PgDumpLoader { //NOPMD
      * Pattern for testing whether it is CREATE POLICY statement.
      */
     private static final Pattern PATTERN_DISABLE_TRIGGER = Pattern.compile(
-           "ALTER\\s+TABLE+\\s+\\w+.+\\w+\\s+DISABLE+\\s+TRIGGER+\\s+\\w+.*$",
+           "ALTER\\s+TABLE+\\s+\"?\\w+\"?.+\"?\\w+\"?\\s+DISABLE+\\s+TRIGGER+\\s+\\w+.*$",
             Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
     /**
      * Pattern for testing whether it is CREATE RULE  statement.
@@ -254,6 +263,8 @@ public class PgDumpLoader { //NOPMD
                 CreateTriggerParser.parseDisable(database, statement);
             } else if (PATTERN_CREATE_FUNCTION.matcher(statement).matches()) {
                 CreateFunctionParser.parse(database, statement);
+            } else if (PATTERN_CREATE_PROCEDURE.matcher(statement).matches()) {
+                CreateProcedureParser.parse(database, statement);
             } else if (PATTERN_CREATE_TYPE.matcher(statement).matches()) {
                 CreateTypeParser.parse(database, statement);
             } else if (PATTERN_COMMENT.matcher(statement).matches()) {

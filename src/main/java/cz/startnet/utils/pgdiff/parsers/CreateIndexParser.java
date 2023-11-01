@@ -32,7 +32,8 @@ public class CreateIndexParser {
 
         parser.expect("INDEX");
         parser.expectOptional("CONCURRENTLY");
-
+        parser.expectOptional("IF", "NOT", "EXISTS");
+        
         final String indexName =
                 ParserUtils.getObjectName(parser.parseIdentifier());
 

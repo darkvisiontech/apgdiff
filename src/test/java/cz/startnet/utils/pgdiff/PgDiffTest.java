@@ -177,6 +177,7 @@ public class PgDiffTest {
                     {"drop_trigger", false, false, false, false},
                     // Tests scenario where TRIGGER is modified.
                     {"modify_trigger", false, false, false, false},
+                    {"create_trigger_postgres12", false, false, false, false},
                     // Tests scenario where VIEW is added.
                     {"add_view", false, false, false, false},
                     // Tests scenario where VIEW is dropped.
@@ -229,6 +230,8 @@ public class PgDiffTest {
                     {"view_colnames", false, false, false, false},
                     // Tests objects with the $ sign in the name
                     {"add_table_bug102", false, false, false, false},
+                    // Tests objects with the PARTITION BY
+                    {"add_table_partition_by", false, false, false, false},
                     // Tests scenario where new UNLOGGED TABLE is added.
                     {"add_unlogged_table", false, false, false, false},
                     // Tests scenario where UNLOGGED TABLE is dropped.
@@ -272,6 +275,8 @@ public class PgDiffTest {
                   , {"alter_view_owner", false, false, false, false}
                   , {"grant_on_table_cols_mixed", false, false, false, false}
                   , {"grant_on_view_cols_mixed", false, false, false, false}
+                  , {"create_schema_no_change_table", false, false, false, false}
+                  , {"add_table_identity_sequence",false,false,false,false}      
                     // Test create trigger in PostgreSQL v12
                   , {"add_trigger_function_postgres12", false, false, false, false}
                     // Test create trigger with referencing tables

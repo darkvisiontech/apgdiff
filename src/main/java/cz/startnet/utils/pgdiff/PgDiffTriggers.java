@@ -11,6 +11,7 @@ import cz.startnet.utils.pgdiff.schema.PgTrigger;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Diffs triggers.
@@ -215,17 +216,19 @@ public class PgDiffTriggers {
         @SuppressWarnings("CollectionWithoutInitialCapacity")
         final List<PgTrigger> list = new ArrayList<PgTrigger>();
 
-        if (newRelation != null)  {
-    
-                for (final PgTrigger newTrigger : newRelation.getTriggers()) {
-                    
-                   PgTrigger oldTrigger = (oldRelation != null)? oldRelation.getTrigger(newTrigger.getName()) : null;
-                    if ((newTrigger.isDisable() && oldTrigger==null) || 
-                           (oldTrigger!=null && oldTrigger.isDisable()!=newTrigger.isDisable())) {
+        if (newRelation != null) {
+
+            for (final PgTrigger newTrigger : newRelation.getTriggers()) {
+
+                if (Objects.nonNull(oldRelation)) {
+                    PgTrigger oldTrigger = oldRelation.getTrigger(newTrigger.getName());
+                    if ((newTrigger.isDisable() && oldTrigger == null)
+                            || (oldTrigger != null && oldTrigger.isDisable() != newTrigger.isDisable())) {
                         list.add(newTrigger);
                     }
                 }
-            
+            }
+
         }
 
         return list;

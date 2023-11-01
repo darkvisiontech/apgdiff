@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS "procedureresult$Operation" (
 	id bigint NOT NULL,
 	name character varying(255),
 	result_id bigint
-);
+) PARTITION BY RANGE(result_id);
 
 ALTER TABLE "procedureresult$Operation" OWNER TO fordfrog;
 

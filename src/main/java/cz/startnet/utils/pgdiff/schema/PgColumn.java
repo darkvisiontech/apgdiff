@@ -72,6 +72,11 @@ public class PgColumn {
      */
     @SuppressWarnings("CollectionWithoutInitialCapacity")
     private final List<PgColumnPrivilege> privileges = new ArrayList<PgColumnPrivilege>();
+    
+    /**
+     * Generated.
+     */
+    private String generated;
 
     /**
      * Creates a new PgColumn object.
@@ -131,7 +136,7 @@ public class PgColumn {
         sbDefinition.append(PgDiffUtils.getQuotedName(name));
         sbDefinition.append(' ');
         sbDefinition.append(type);
-
+        
         if (defaultValue != null && !defaultValue.isEmpty()) {
             sbDefinition.append(" DEFAULT ");
             sbDefinition.append(defaultValue);
@@ -307,5 +312,23 @@ public class PgColumn {
         }
 
         setType(string);
+    }
+    
+    /**
+     * Getter for {@link #generated}.
+     *
+     * @return {@link #generated}
+     */
+    public String getGenerated() {
+        return generated;
+    }
+
+    /**
+     * Setter for {@link #generated}.
+     *
+     * @param generated {@link #generated}
+     */
+    public void setGenerated(final String generated) {
+        this.generated = generated;
     }
 }
