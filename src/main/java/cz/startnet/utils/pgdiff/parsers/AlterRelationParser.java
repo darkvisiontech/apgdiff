@@ -94,6 +94,8 @@ public class AlterRelationParser {
                     parseAddForeignKey(parser, table);
                 } else if (parser.expectOptional("CONSTRAINT")) {
                     parseAddConstraint(parser, table, schema);
+                } else if (parser.expectOptional("COLUMN")) {
+                    parseAddColumn(parser, table);
                 } else {
                     parser.throwUnsupportedCommand();
                 }
@@ -237,6 +239,24 @@ public class AlterRelationParser {
         } else {
             constraint.setDefinition(parser.getExpression());
         }
+    }
+
+    /**
+     * Parses ADD COLUMN action.
+     *
+     * @param parser parser
+     * @param table  table
+     */
+    private static void parseAddColumn(final Parser parser,
+            final PgTable table) {
+
+        final String columnName =
+                ParserUtils.getObjectName(parser.parseIdentifier());
+
+        final PgColumn newColumn = new PgColumn(columnName);
+        newColumn.parseDefinition(parser.getExpression());
+
+        table.addColumn(newColumn);
     }
 
     /**
