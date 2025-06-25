@@ -27,7 +27,7 @@ public class CreateTypeParser {
      * @param statement CREATE TYPE statement
      */
     public static void parse(final PgDatabase database,
-            final String statement) {
+            final String statement, boolean ignoreSchemaCreation) {
         
         
         final Parser parser = new Parser(statement);
@@ -37,12 +37,17 @@ public class CreateTypeParser {
         final PgType type = new PgType(ParserUtils.getObjectName(typeName));
         final String schemaName
                 = ParserUtils.getSchemaName(typeName, database);
-        final PgSchema schema = database.getSchema(schemaName);
+        PgSchema schema = database.getSchema(schemaName);
 
         if (schema == null) {
-            throw new RuntimeException(MessageFormat.format(
+            if (ignoreSchemaCreation) {
+                schema = new PgSchema(schemaName);
+                database.addSchema(schema);
+            } else {
+                throw new RuntimeException(MessageFormat.format(
                     Resources.getString("CannotFindSchema"), schemaName,
                     statement));
+            }
         }
 
         schema.addType(type);

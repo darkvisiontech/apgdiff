@@ -27,7 +27,7 @@ public class CreateViewParser {
      * @param statement CREATE VIEW statement
      */
     public static void parse(final PgDatabase database,
-            final String statement) {
+            final String statement, boolean ignoreSchemaCreation) {
         final Parser parser = new Parser(statement);
 
         parser.expect("CREATE");
@@ -73,12 +73,18 @@ public class CreateViewParser {
         view.setQuery(query);
 
         final String schemaName = ParserUtils.getSchemaName(viewName, database);
-        final PgSchema schema = database.getSchema(schemaName);
+        PgSchema schema = database.getSchema(schemaName);
 
         if (schema == null) {
-            throw new RuntimeException(MessageFormat.format(
+            if (ignoreSchemaCreation) {
+                schema = new PgSchema(schemaName);
+                database.addSchema(schema);
+            }
+            else {
+                throw new RuntimeException(MessageFormat.format(
                     Resources.getString("CannotFindSchema"), schemaName,
                     statement));
+            }
         }
 
         schema.addRelation(view);
