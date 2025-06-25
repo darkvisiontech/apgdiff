@@ -255,7 +255,7 @@ public class PgDumpLoader { //NOPMD
             } else if (PATTERN_CREATE_INDEX.matcher(statement).matches()) {
                 CreateIndexParser.parse(database, statement);
             } else if (PATTERN_CREATE_VIEW.matcher(statement).matches()) {
-                CreateViewParser.parse(database, statement);
+                CreateViewParser.parse(database, statement, ignoreSchemaCreation);
             } else if (PATTERN_CREATE_TRIGGER.matcher(statement).matches()) {
                 CreateTriggerParser.parse(
                         database, statement, ignoreSlonyTriggers);
@@ -266,7 +266,7 @@ public class PgDumpLoader { //NOPMD
             } else if (PATTERN_CREATE_PROCEDURE.matcher(statement).matches()) {
                 CreateProcedureParser.parse(database, statement);
             } else if (PATTERN_CREATE_TYPE.matcher(statement).matches()) {
-                CreateTypeParser.parse(database, statement);
+                CreateTypeParser.parse(database, statement, ignoreSchemaCreation);
             } else if (PATTERN_COMMENT.matcher(statement).matches()) {
                 CommentParser.parse(
                         database, statement, outputIgnoredStatements);
